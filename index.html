@@ -7,6 +7,23 @@
   <meta name="robots" content="noindex, nofollow">
   <title>REAP: Anonymous Submission</title>
   <link rel="stylesheet" href="static/css/style.css">
+  <style>
+    /* v2 overrides (delete this block to revert) */
+    .release-note {
+      margin: 14px 0 0;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+    @media (min-width: 1100px) {
+      .video-grid { grid-template-columns: repeat(5, 1fr); gap: 14px; }
+      .video-item figcaption { font-size: 0.82rem; }
+    }
+    .limitations p {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
 
@@ -22,19 +39,34 @@
 
       <p class="venue">Under review for CoRL&nbsp;2026</p>
 
-      <div class="link-buttons">
-        <span class="btn btn-disabled" title="Not yet available during review">
-          <span class="icon">📄</span><span>Paper</span>
-        </span>
-        <span class="btn btn-disabled" title="Not yet available during review">
-          <span class="icon">📑</span><span>Supplementary</span>
-        </span>
-        <span class="btn btn-disabled" title="Available after de-anonymisation">
-          <span class="icon">⟨/⟩</span><span>Code (post-acceptance)</span>
-        </span>
-      </div>
+      <p class="release-note">
+        Paper, supplementary, and code will be released after the review period.
+      </p>
     </div>
   </header>
+
+  <!-- =============================================================== -->
+  <!-- HERO VIDEO + tagline (moved above abstract)                       -->
+  <!-- =============================================================== -->
+  <section class="hero-video">
+    <div class="container">
+      <figure class="banner-video">
+        <video autoplay muted loop playsinline preload="metadata"
+               poster="static/images/env_a_tabletop.png">
+          <source src="static/videos/banner_montage.mp4" type="video/mp4">
+        </video>
+      </figure>
+      <p class="tagline">
+        REAP learns a <em>Q-value function</em> that scores symbolic actions
+        by anticipating which will be geometrically feasible. The function
+        can drive a greedy policy or guide best-first search at
+        deployment. By skipping motion-planner checks on actions the
+        policy deems infeasible, REAP reduces motion-planning overhead
+        by an order of magnitude
+        across five robot rearrangement domains.
+      </p>
+    </div>
+  </section>
 
   <!-- =============================================================== -->
   <!-- ABSTRACT                                                          -->
@@ -70,28 +102,6 @@
   </section>
 
   <!-- =============================================================== -->
-  <!-- HERO VIDEO + tagline                                              -->
-  <!-- =============================================================== -->
-  <section class="hero-video">
-    <div class="container">
-      <figure class="banner-video">
-        <video autoplay muted loop playsinline preload="metadata"
-               poster="static/images/env_a_tabletop.png">
-          <source src="static/videos/banner_montage.mp4" type="video/mp4">
-        </video>
-        <span class="video-speed">2&times;</span>
-      </figure>
-      <p class="tagline">
-        REAP learns a <em>policy</em> that selects symbolic actions while
-        anticipating which will be geometrically feasible. By skipping
-        motion-planner checks on actions its policy deems infeasible,
-        REAP reduces motion-planning overhead by an order of magnitude
-        across five robot rearrangement domains.
-      </p>
-    </div>
-  </section>
-
-  <!-- =============================================================== -->
   <!-- KEY RESULTS: headline stat cards                                 -->
   <!-- =============================================================== -->
   <section class="section key-results">
@@ -100,7 +110,7 @@
         <div class="stat-card">
           <div class="stat-value">95.7<span class="stat-unit">%</span></div>
           <div class="stat-label">Solve rate on 300 open-tabletop problems</div>
-          <div class="stat-sub">REAP-GBFS, vs 76.7% for h<sub>FF</sub> and 61.7% for BrFS</div>
+          <div class="stat-sub">REAP-GBFS, vs 76.7% for h<sub>FF</sub> and 61.7% for BrFS &middot; 5-min cutoff, incl. motion-planner calls</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">~10<span class="stat-unit">&times;</span></div>
@@ -109,8 +119,8 @@
         </div>
         <div class="stat-card">
           <div class="stat-value">1.14</div>
-          <div class="stat-label">Near-perfect feasibility model</div>
-          <div class="stat-sub">Mean expansions per plan step (1.00 median). REAP&rsquo;s policy
+          <div class="stat-label">Search expansions per plan step</div>
+          <div class="stat-sub">vs 3.68 for h<sub>FF</sub> and 16.63 for BrFS. REAP&rsquo;s policy
             anticipates infeasibility, so the search barely visits any dead ends.</div>
         </div>
         <div class="stat-card">
@@ -131,9 +141,8 @@
       <p class="section-intro">
         Each video shows REAP&rsquo;s learned policy deployed under
         greedy best-first search, solving one in-distribution and one
-        out-of-distribution instance per environment (Access-19 is shown
-        in-distribution only; the 18-blocker OOD case is discussed in
-        the paper). The same architecture and training loop are used
+        out-of-distribution instance per environment (Access-19 is
+        shown in-distribution only). The same architecture and training loop are used
         across all five domains; only the PDDL specification and scene
         generator change.
       </p>
@@ -145,11 +154,10 @@
                    poster="static/images/env_a_tabletop.png">
               <source src="static/videos/open_tabletop.mp4" type="video/mp4">
             </video>
-            <span class="video-speed">2&times;</span>
           </div>
-          <figcaption><strong>Open-Tabletop</strong>: cylinder rearrangement on a 10×7 grid. Shown: an
-            in-distribution instance (&le; 14 cylinders) and an OOD
-            22-cylinder instance.</figcaption>
+          <figcaption><strong>Open-Tabletop</strong>: cylinder rearrangement on a 10×7 grid. Shown:
+            an in-distribution instance and an OOD instance along the
+            plan-length axis.</figcaption>
         </figure>
 
         <figure class="video-item">
@@ -158,7 +166,6 @@
                    poster="static/images/env_b_confined.png">
               <source src="static/videos/confined_shelf.mp4" type="video/mp4">
             </video>
-            <span class="video-speed">2&times;</span>
           </div>
           <figcaption><strong>Confined-Shelf</strong>: colour-sort cylinders inside a closed
             cubicle with single-side reachability. Shown: an
@@ -173,7 +180,6 @@
                    poster="static/images/env_f_ycb.png">
               <source src="static/videos/multilevel_shelf.mp4" type="video/mp4">
             </video>
-            <span class="video-speed">2&times;</span>
           </div>
           <figcaption><strong>Multi-Level Shelf</strong>: retrieve the OoI from a
             three-tier shelf. Shown: an in-distribution instance
@@ -187,11 +193,10 @@
                    poster="static/images/env_d_access19.png">
               <source src="static/videos/access19.mp4" type="video/mp4">
             </video>
-            <span class="video-speed">2&times;</span>
           </div>
           <figcaption><strong>Access-19</strong>: deeply-occluded object
             retrieval in a 96-cell two-deck cubicle. Shown: an
-            in-distribution instance (&le; 14 blockers).</figcaption>
+            18-blocker partial run.</figcaption>
           <p class="env-source">From Ait Bouhsain et&nbsp;al., <a href="https://hal.science/hal-05392791" target="_blank" rel="noopener">HAL&nbsp;preprint&nbsp;2025</a>.</p>
         </figure>
 
@@ -201,7 +206,6 @@
                    poster="static/images/env_e_mlb_bridge.png">
               <source src="static/videos/blocks.mp4" type="video/mp4">
             </video>
-            <span class="video-speed">2&times;</span>
           </div>
           <figcaption><strong>3D Block Stacking</strong>: build a multi-part structure
             from cube, oblong, and long blocks on a 10×10×5 stack grid.
@@ -330,12 +334,6 @@
         </figcaption>
       </figure>
 
-      <p class="section-intro" style="margin-top: 18px;">
-        We additionally compare against the TAMP solver
-        <strong>PDDLStream</strong> in three configurations; the full
-        numbers are in the table below.
-      </p>
-
       <figure class="baselines-table-wrap">
         <table class="env-table">
           <thead>
@@ -420,21 +418,6 @@
         </figcaption>
       </figure>
 
-      <h3 class="subsection-title">OOD instance solved end-to-end</h3>
-      <figure class="full-video">
-        <div class="video-wrap">
-          <video controls muted loop preload="metadata">
-            <source src="static/videos/ood_demo.mp4" type="video/mp4">
-          </video>
-          <span class="video-speed">4&times;</span>
-        </div>
-        <figcaption>
-          REAP-GBFS solving an open-tabletop instance with 22 objects
-          (more than the training maximum of 14), without
-          retraining.
-        </figcaption>
-      </figure>
-
       <h3 class="subsection-title">Cross-environment OOD generalization</h3>
       <figure class="env-table-wrap">
         <table class="env-table">
@@ -467,15 +450,9 @@
               <td class="num">100.0</td><td class="num">1.01</td><td class="num">7.3</td>
             </tr>
             <tr class="env-group">
-              <td rowspan="2"><strong>Access-19</strong></td>
-              <td>In-distribution (≤ 14 blockers)</td>
+              <td><strong>Access-19</strong></td>
+              <td>In-distribution (&le; 14 blockers)</td>
               <td class="num">98.0</td><td class="num">1.03</td><td class="num">7.8</td>
-            </tr>
-            <tr>
-              <td>OOD (18 blockers, 74-action plan)</td>
-              <td class="tbd num">n/a</td>
-              <td class="tbd num">n/a</td>
-              <td class="tbd num">n/a</td>
             </tr>
             <tr class="env-group">
               <td rowspan="2"><strong>3D Block Stacking</strong></td>
@@ -492,12 +469,34 @@
           <span class="sc">REAP-GBFS</span> across the four non-tabletop
           environments. <em>exp./steps</em> is search expansions
           normalized by plan length; <em>MP/plan</em> is motion-planner
-          queries per solved problem. The Access-19 OOD row is omitted
-          at the time of submission. REAP solves
-          in-distribution (up to 14 blockers) but does not generalize
-          within the 5-minute cut-off to the 18-blocker case.
+          queries per solved problem. Access-19 is shown
+          in-distribution only: REAP solves up to 14 blockers reliably
+          but does not generalize within the 5-minute cut-off to the
+          18-blocker case at the time of submission.
         </figcaption>
       </figure>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- LIMITATIONS                                                       -->
+  <!-- =============================================================== -->
+  <section class="section limitations">
+    <div class="container container-narrow">
+      <h2>Limitations</h2>
+      <p>
+        Generalization within a domain holds; generalization across
+        domain specifications does not. The symbolic abstraction
+        (predicates, action schemas) is hand-crafted per environment,
+        and REAP learns the heuristic over that fixed vocabulary.
+        Within a domain, REAP scales to denser scenes and longer plans
+        than seen during training, but Access-19 with 18 blockers
+        remains unsolved within the 5-minute cut-off at the time of
+        submission. Training also requires a few hundred
+        motion-planner-supervised episodes per environment, which is
+        cheaper than running motion planning at deployment but is
+        still not free.
+      </p>
     </div>
   </section>
 

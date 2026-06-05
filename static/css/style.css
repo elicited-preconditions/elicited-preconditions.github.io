@@ -229,7 +229,7 @@ a:hover { text-decoration: underline; }
 }
 .video-item {
   margin: 0;
-  background: var(--bg-alt);
+  background: #fff;
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;

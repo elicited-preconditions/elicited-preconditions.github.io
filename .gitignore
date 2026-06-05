@@ -1,0 +1,18 @@
+# Never commit confidential paper artifacts
+*.pdf
+
+# Never commit local notes / docs / READMEs
+*.md
+README*
+CLAUDE*
+
+# OS / editor cruft
+.DS_Store
+*.swp
+*.bak
+*~
+.vscode/
+.idea/
+
+# Side-by-side preview files used during iteration
+index_v[0-9]*.html
