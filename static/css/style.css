@@ -246,6 +246,7 @@ a:hover { text-decoration: underline; }
   height: 100%;
   display: block;
   object-fit: cover;
+  object-position: top;
 }
 .video-item figcaption {
   padding: 12px 14px;
@@ -373,6 +374,24 @@ a:hover { text-decoration: underline; }
   margin-right: 4px;
 }
 .step-callout strong { color: var(--accent); }
+
+.method-callout {
+  max-width: 980px;
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  border-left: 3px solid var(--accent-warm);
+  background: #fff;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+.method-callout .callout-label {
+  font-weight: 600;
+  color: var(--accent-warm);
+  margin-right: 4px;
+}
+.method-callout strong { color: var(--accent); }
 
 /* ===== Comparison section ================================================ */
 .comparison { background: var(--bg-alt); }

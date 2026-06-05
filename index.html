@@ -150,7 +150,7 @@
       <div class="video-grid">
         <figure class="video-item">
           <div class="video-wrap">
-            <video controls muted loop preload="metadata"
+            <video autoplay muted loop playsinline preload="metadata"
                    poster="static/images/env_a_tabletop.png">
               <source src="static/videos/open_tabletop.mp4" type="video/mp4">
             </video>
@@ -162,7 +162,7 @@
 
         <figure class="video-item">
           <div class="video-wrap">
-            <video controls muted loop preload="metadata"
+            <video autoplay muted loop playsinline preload="metadata"
                    poster="static/images/env_b_confined.png">
               <source src="static/videos/confined_shelf.mp4" type="video/mp4">
             </video>
@@ -176,7 +176,7 @@
 
         <figure class="video-item">
           <div class="video-wrap">
-            <video controls muted loop preload="metadata"
+            <video autoplay muted loop playsinline preload="metadata"
                    poster="static/images/env_f_ycb.png">
               <source src="static/videos/multilevel_shelf.mp4" type="video/mp4">
             </video>
@@ -189,7 +189,7 @@
 
         <figure class="video-item">
           <div class="video-wrap">
-            <video controls muted loop preload="metadata"
+            <video autoplay muted loop playsinline preload="metadata"
                    poster="static/images/env_d_access19.png">
               <source src="static/videos/access19.mp4" type="video/mp4">
             </video>
@@ -202,7 +202,7 @@
 
         <figure class="video-item">
           <div class="video-wrap">
-            <video controls muted loop preload="metadata"
+            <video autoplay muted loop playsinline preload="metadata"
                    poster="static/images/env_e_mlb_bridge.png">
               <source src="static/videos/blocks.mp4" type="video/mp4">
             </video>
@@ -250,14 +250,6 @@
               contribution is learning to predict that subset without
               consulting the motion planner.
             </p>
-            <div class="step-callout">
-              <span class="callout-label">For example:</span>
-              on an open-tabletop state with 10 cylinders, roughly
-              <strong>60&ndash;70 pick / place actions</strong> are
-              symbolically applicable. Only a handful are geometrically
-              feasible; the rest fail because a neighbouring
-              cylinder blocks the gripper approach.
-            </div>
           </div>
         </div>
 
@@ -305,6 +297,15 @@
           </div>
         </div>
 
+      </div>
+
+      <div class="method-callout">
+        <span class="callout-label">Concrete example:</span>
+        on an open-tabletop state with 10 cylinders, roughly
+        <strong>60&ndash;70 pick / place actions</strong> are
+        symbolically applicable. Only a handful are geometrically
+        feasible; the rest fail because a neighbouring cylinder
+        blocks the gripper approach.
       </div>
     </div>
   </section>
