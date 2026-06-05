@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 760 280"
+     role="img"
+     aria-label="Motion-planner queries per plan on open-tabletop. REAP-GBFS 6.2, REAP-greedy 6.3, BrFS 69.1, h_FF 40.0.">
+  <style>
+    .bar-our   { fill: #284b63; }
+    .bar-class { fill: #4c6a8d; }
+    .label     { font: 600 12px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #1f2430; }
+    .value     { font: 700 12px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #1f2430; }
+    .axis      { stroke: #b7c0cd; stroke-width: 1; }
+    .gridline  { stroke: #e2e6ec; stroke-width: 1; stroke-dasharray: 2 3; }
+    .axis-tick { font: 400 11px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #59626a; }
+    .title     { font: 700 13px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #1f2430; }
+    .axis-label { font: 500 11px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #59626a; }
+  </style>
+
+  <!-- Title -->
+  <text x="380" y="22" class="title" text-anchor="middle">Motion-planner queries per solved plan (open-tabletop, lower is better)</text>
+
+  <!-- Chart area: x in [240, 720] = 480px wide; max bar value 80; scale = 6 px/unit -->
+  <line x1="240" y1="50"  x2="240" y2="230" class="axis"/>
+  <line x1="240" y1="230" x2="720" y2="230" class="axis"/>
+
+  <g class="gridline">
+    <line x1="360" y1="50" x2="360" y2="230"/>
+    <line x1="480" y1="50" x2="480" y2="230"/>
+    <line x1="600" y1="50" x2="600" y2="230"/>
+    <line x1="720" y1="50" x2="720" y2="230"/>
+  </g>
+  <g class="axis-tick">
+    <text x="240" y="248" text-anchor="middle">0</text>
+    <text x="360" y="248" text-anchor="middle">20</text>
+    <text x="480" y="248" text-anchor="middle">40</text>
+    <text x="600" y="248" text-anchor="middle">60</text>
+    <text x="720" y="248" text-anchor="middle">80</text>
+  </g>
+  <text x="480" y="268" class="axis-label" text-anchor="middle">MP queries per solved plan</text>
+
+  <!-- 4 bars, 40px slot height, top at y=60 -->
+  <!-- Slot 1 (y=60..82): REAP-GBFS 6.2 -->
+  <text x="232" y="76" class="label" text-anchor="end">REAP-GBFS</text>
+  <rect x="240" y="62"  width="37"  height="22" class="bar-our"/>
+  <text x="285" y="78" class="value">6.2</text>
+
+  <!-- Slot 2 (y=100..122): REAP-greedy 6.3 -->
+  <text x="232" y="116" class="label" text-anchor="end">REAP-greedy</text>
+  <rect x="240" y="102" width="38"  height="22" class="bar-our"/>
+  <text x="286" y="118" class="value">6.3</text>
+
+  <!-- Slot 3 (y=140..162): BrFS 69.1 -->
+  <text x="232" y="156" class="label" text-anchor="end">BrFS</text>
+  <rect x="240" y="142" width="415" height="22" class="bar-class"/>
+  <text x="663" y="158" class="value">69.1</text>
+
+  <!-- Slot 4 (y=180..202): h_FF 40.0 -->
+  <text x="232" y="196" class="label" text-anchor="end">
+    h<tspan dy="3" font-size="8.5">FF</tspan><tspan dy="-3"> </tspan>
+  </text>
+  <rect x="240" y="182" width="240" height="22" class="bar-class"/>
+  <text x="488" y="198" class="value">40.0</text>
+</svg>

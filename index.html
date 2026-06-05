@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="REAP learns a relational graph neural network heuristic over a coarse symbolic abstraction with motion-planner feedback, deployed under greedy best-first search across five robot rearrangement environments.">
+  <meta name="robots" content="noindex, nofollow">
+  <title>REAP: Anonymous Submission</title>
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+  <!-- =============================================================== -->
+  <!-- HERO                                                              -->
+  <!-- =============================================================== -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="paper-title">
+        REAP: Learning General Rearrangement Heuristics<br>
+        from Motion-Planner Feedback
+      </h1>
+
+      <p class="venue">Under review for CoRL&nbsp;2026</p>
+
+      <div class="link-buttons">
+        <span class="btn btn-disabled" title="Not yet available during review">
+          <span class="icon">📄</span><span>Paper</span>
+        </span>
+        <span class="btn btn-disabled" title="Not yet available during review">
+          <span class="icon">📑</span><span>Supplementary</span>
+        </span>
+        <span class="btn btn-disabled" title="Available after de-anonymisation">
+          <span class="icon">⟨/⟩</span><span>Code (post-acceptance)</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- =============================================================== -->
+  <!-- ABSTRACT                                                          -->
+  <!-- =============================================================== -->
+  <section class="section abstract">
+    <div class="container container-narrow">
+      <h2>Abstract</h2>
+      <p>
+        Robotic rearrangement tasks require planning sequences of actions
+        that fulfill high-level specifications while also being
+        geometrically feasible. Symbolic abstractions make the
+        combinatorial structure of rearrangement tasks tractable, but they
+        usually do not fully capture the geometric constraints that
+        determine which actions a motion policy can realize. This is due
+        to the complexity of expressing the underlying geometric
+        feasibility constraints in the symbolic model. We propose
+        <strong>REAP</strong> (Rearrangement with Elicited Action
+        Preconditions), a framework in which a relational graph neural
+        network heuristic is learned over a simple symbolic abstraction.
+        A motion policy serves as a supervisor that elicits the
+        <em>hidden geometric preconditions</em> of the problem during
+        training. Deployed with greedy best-first search, the learned
+        heuristic generalizes out-of-distribution along object count,
+        plan length, and object arrangement. Compared to classical
+        heuristic search and TAMP baselines on the same instances, REAP
+        requires approximately an order of magnitude fewer motion policy
+        queries because the heuristic anticipates which low-level actions
+        are geometrically feasible. We show that the same architecture,
+        training recipe, and search procedure adapt to various robotic
+        rearrangement domains.
+      </p>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- HERO VIDEO + tagline                                              -->
+  <!-- =============================================================== -->
+  <section class="hero-video">
+    <div class="container">
+      <figure class="banner-video">
+        <video autoplay muted loop playsinline preload="metadata"
+               poster="static/images/env_a_tabletop.png">
+          <source src="static/videos/banner_montage.mp4" type="video/mp4">
+        </video>
+        <span class="video-speed">2&times;</span>
+      </figure>
+      <p class="tagline">
+        REAP learns a <em>policy</em> that selects symbolic actions while
+        anticipating which will be geometrically feasible. By skipping
+        motion-planner checks on actions its policy deems infeasible,
+        REAP reduces motion-planning overhead by an order of magnitude
+        across five robot rearrangement domains.
+      </p>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- KEY RESULTS: headline stat cards                                 -->
+  <!-- =============================================================== -->
+  <section class="section key-results">
+    <div class="container">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value">95.7<span class="stat-unit">%</span></div>
+          <div class="stat-label">Solve rate on 300 open-tabletop problems</div>
+          <div class="stat-sub">REAP-GBFS, vs 76.7% for h<sub>FF</sub> and 61.7% for BrFS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">~10<span class="stat-unit">&times;</span></div>
+          <div class="stat-label">Fewer motion-planner queries per solved plan</div>
+          <div class="stat-sub">6.2 for REAP-GBFS, 40.0 for h<sub>FF</sub>, 69.1 for BrFS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">1.14</div>
+          <div class="stat-label">Near-perfect feasibility model</div>
+          <div class="stat-sub">Mean expansions per plan step (1.00 median). REAP&rsquo;s policy
+            anticipates infeasibility, so the search barely visits any dead ends.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">5</div>
+          <div class="stat-label">Rearrangement environments</div>
+          <div class="stat-sub">Same architecture &amp; training loop; only the PDDL domain changes</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- PER-ENV POLICY EXECUTION                                          -->
+  <!-- =============================================================== -->
+  <section class="section videos">
+    <div class="container">
+      <h2>Policy Execution Across Five Environments</h2>
+      <p class="section-intro">
+        Each video shows REAP&rsquo;s learned policy deployed under
+        greedy best-first search, solving one in-distribution and one
+        out-of-distribution instance per environment (Access-19 is shown
+        in-distribution only; the 18-blocker OOD case is discussed in
+        the paper). The same architecture and training loop are used
+        across all five domains; only the PDDL specification and scene
+        generator change.
+      </p>
+
+      <div class="video-grid">
+        <figure class="video-item">
+          <div class="video-wrap">
+            <video controls muted loop preload="metadata"
+                   poster="static/images/env_a_tabletop.png">
+              <source src="static/videos/open_tabletop.mp4" type="video/mp4">
+            </video>
+            <span class="video-speed">2&times;</span>
+          </div>
+          <figcaption><strong>Open-Tabletop</strong>: cylinder rearrangement on a 10×7 grid. Shown: an
+            in-distribution instance (&le; 14 cylinders) and an OOD
+            22-cylinder instance.</figcaption>
+        </figure>
+
+        <figure class="video-item">
+          <div class="video-wrap">
+            <video controls muted loop preload="metadata"
+                   poster="static/images/env_b_confined.png">
+              <source src="static/videos/confined_shelf.mp4" type="video/mp4">
+            </video>
+            <span class="video-speed">2&times;</span>
+          </div>
+          <figcaption><strong>Confined-Shelf</strong>: colour-sort cylinders inside a closed
+            cubicle with single-side reachability. Shown: an
+            in-distribution monotone instance and a non-monotone
+            OOD instance (16 cylinders).</figcaption>
+          <p class="env-source">Adapted from Wang et&nbsp;al., <a href="https://ojs.aaai.org/index.php/ICAPS/article/view/19867" target="_blank" rel="noopener">ICAPS&nbsp;2022</a>.</p>
+        </figure>
+
+        <figure class="video-item">
+          <div class="video-wrap">
+            <video controls muted loop preload="metadata"
+                   poster="static/images/env_f_ycb.png">
+              <source src="static/videos/multilevel_shelf.mp4" type="video/mp4">
+            </video>
+            <span class="video-speed">2&times;</span>
+          </div>
+          <figcaption><strong>Multi-Level Shelf</strong>: retrieve the OoI from a
+            three-tier shelf. Shown: an in-distribution instance
+            (1&ndash;5 blockers) and an OOD instance (4&ndash;10 blockers).</figcaption>
+          <p class="env-source">Adapted from Ait Bouhsain et&nbsp;al., <a href="https://hal.science/hal-05392791" target="_blank" rel="noopener">HAL&nbsp;preprint&nbsp;2025</a>.</p>
+        </figure>
+
+        <figure class="video-item">
+          <div class="video-wrap">
+            <video controls muted loop preload="metadata"
+                   poster="static/images/env_d_access19.png">
+              <source src="static/videos/access19.mp4" type="video/mp4">
+            </video>
+            <span class="video-speed">2&times;</span>
+          </div>
+          <figcaption><strong>Access-19</strong>: deeply-occluded object
+            retrieval in a 96-cell two-deck cubicle. Shown: an
+            in-distribution instance (&le; 14 blockers).</figcaption>
+          <p class="env-source">From Ait Bouhsain et&nbsp;al., <a href="https://hal.science/hal-05392791" target="_blank" rel="noopener">HAL&nbsp;preprint&nbsp;2025</a>.</p>
+        </figure>
+
+        <figure class="video-item">
+          <div class="video-wrap">
+            <video controls muted loop preload="metadata"
+                   poster="static/images/env_e_mlb_bridge.png">
+              <source src="static/videos/blocks.mp4" type="video/mp4">
+            </video>
+            <span class="video-speed">2&times;</span>
+          </div>
+          <figcaption><strong>3D Block Stacking</strong>: build a multi-part structure
+            from cube, oblong, and long blocks on a 10×10×5 stack grid.
+            Shown: an in-distribution instance (1&ndash;8 blocks) and an
+            OOD combined-structure instance (6&ndash;13 blocks).</figcaption>
+          <p class="env-source">Inspired by Kulshrestha &amp; Qureshi, <a href="https://proceedings.mlr.press/v229/kulshrestha23a.html" target="_blank" rel="noopener">CoRL&nbsp;2023</a>.</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- METHOD                                                            -->
+  <!-- =============================================================== -->
+  <section class="section method">
+    <div class="container">
+      <h2>Method</h2>
+
+      <figure class="method-figure">
+        <img src="static/images/fig2_method.png" alt="REAP pipeline overview">
+        <figcaption>
+          REAP pipeline: at deployment (top-right) and during training
+          (bottom-right). The shared left-side modules (symbolic input, relational GNN,
+          and feasibility oracle) are unchanged between the two passes.
+        </figcaption>
+      </figure>
+
+      <div class="method-steps">
+
+        <div class="method-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Coarse symbolic abstraction</h3>
+            <p>
+              Each environment is encoded as a coarse PDDL/STRIPS planning
+              problem with a small set of predicates (cell occupancy, gripper
+              state, support relations) and action schemas for picking and
+              placing. The abstraction is deliberately a loose
+              over-approximation: in most domains, almost every pick or
+              place is symbolically applicable, but only a small subset
+              is geometrically realizable at any given state. REAP&rsquo;s
+              contribution is learning to predict that subset without
+              consulting the motion planner.
+            </p>
+            <div class="step-callout">
+              <span class="callout-label">For example:</span>
+              on an open-tabletop state with 10 cylinders, roughly
+              <strong>60&ndash;70 pick / place actions</strong> are
+              symbolically applicable. Only a handful are geometrically
+              feasible; the rest fail because a neighbouring
+              cylinder blocks the gripper approach.
+            </div>
+          </div>
+        </div>
+
+        <div class="method-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Learned action-selection policy</h3>
+            <p>
+              A relational GNN maps state-action pairs (s, a) to scalar
+              Q-values. Taken together, the Q-values define a policy
+              that selects actions while anticipating their geometric
+              feasibility. States and goals are encoded as atoms, so a
+              single architecture generalizes across instances with
+              different numbers of objects and cells.
+            </p>
+          </div>
+        </div>
+
+        <div class="method-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Motion-planner-as-supervisor</h3>
+            <p>
+              During training, an ε-greedy weighted-A* search
+              collects rollouts and consults a motion planner for the
+              feasibility of each selected action. Infeasible actions
+              incur a cost penalty, so the learned heuristic anticipates
+              which symbolically applicable actions will fail the
+              geometric check.
+            </p>
+          </div>
+        </div>
+
+        <div class="method-step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h3>Deployment via greedy best-first search</h3>
+            <p>
+              At test time, a greedy best-first search uses the learned
+              Q-values to order successors and consults the motion
+              planner only for the most promising candidates. Feasibility
+              verdicts are cached, so a single rejection prunes the
+              corresponding sub-tree.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- COMPARISON WITH BASELINES                                         -->
+  <!-- =============================================================== -->
+  <section class="section comparison">
+    <div class="container">
+      <h2>Comparison with Baselines</h2>
+      <p class="section-intro">
+        On the open-tabletop suite, REAP-GBFS solves substantially more
+        problems than the classical search baselines (BrFS,
+        h<sub>FF</sub>) while making roughly an order of magnitude
+        fewer motion-planner queries per solved plan.
+      </p>
+
+      <figure class="bar-chart">
+        <object data="static/images/mp_queries_chart.svg"
+                type="image/svg+xml"
+                aria-label="Motion-planner queries per plan: REAP-GBFS vs classical baselines.">
+          <img src="static/images/mp_queries_chart.svg" alt="Motion-planner queries per plan">
+        </object>
+        <figcaption>
+          Motion-planner queries per solved plan, 5-minute compute cap
+          per problem. Lower is better.
+        </figcaption>
+      </figure>
+
+      <p class="section-intro" style="margin-top: 18px;">
+        We additionally compare against the TAMP solver
+        <strong>PDDLStream</strong> in three configurations; the full
+        numbers are in the table below.
+      </p>
+
+      <figure class="baselines-table-wrap">
+        <table class="env-table">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th class="num-head">Solve&nbsp;(%)</th>
+              <th class="num-head">MP&nbsp;/&nbsp;plan</th>
+              <th class="num-head">Mean&nbsp;exp./steps</th>
+              <th class="num-head">Time&nbsp;(s)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="our-method">
+              <td><strong>REAP-GBFS</strong></td>
+              <td class="num"><strong>95.7</strong></td>
+              <td class="num"><strong>6.2</strong></td>
+              <td class="num"><strong>1.14</strong></td>
+              <td class="num"><strong>2.9</strong></td>
+            </tr>
+            <tr class="our-method">
+              <td>REAP-greedy</td>
+              <td class="num">87.7</td>
+              <td class="num">&asymp;&nbsp;6.3</td>
+              <td class="num">1.00</td>
+              <td class="num">2.4</td>
+            </tr>
+            <tr>
+              <td>BrFS</td><td class="num">61.7</td><td class="num">69.1</td><td class="num">16.63</td><td class="num">57.9</td>
+            </tr>
+            <tr>
+              <td>h<sub>FF</sub></td>
+              <td class="num">76.7</td><td class="num">40.0</td><td class="num">3.68</td><td class="num">28.4</td>
+            </tr>
+            <tr>
+              <td>PDDLStream (test-stream, ff-astar2)</td>
+              <td class="num">42.0</td><td class="num">2.4</td><td class="num">1.41</td><td class="num">3.9</td>
+            </tr>
+            <tr>
+              <td>PDDLStream (test-stream, ff-eager)</td>
+              <td class="num">41.3</td><td class="num">1.6</td><td class="num">1.14</td><td class="num">1.6</td>
+            </tr>
+            <tr>
+              <td>PDDLStream (cell-generator, ff-eager)</td>
+              <td class="num">44.0</td><td class="num">8.7</td><td class="num">3.47</td><td class="num">9.2</td>
+            </tr>
+          </tbody>
+        </table>
+        <figcaption>
+          PDDLStream&rsquo;s per-plan averages are over the 42&ndash;44%
+          of the suite it solves (mostly no-relocation problems), and
+          are not directly comparable to REAP&rsquo;s full-suite averages.
+        </figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- OOD GENERALIZATION                                                -->
+  <!-- =============================================================== -->
+  <section class="section results">
+    <div class="container">
+      <h2>Out-of-Distribution Generalization</h2>
+      <p class="section-intro">
+        REAP&rsquo;s learned heuristic generalizes out-of-distribution along
+        several axes. On open-tabletop, the policy trained on at most
+        14 objects with plan lengths up to 11 reaches 95.7% solve
+        rate under <span class="sc">REAP-GBFS</span> across the full
+        300-problem suite (up to 24 objects, plan lengths up to 15).
+      </p>
+
+      <h3 class="subsection-title">Open-Tabletop: three OOD axes</h3>
+      <figure class="ood-figure">
+        <img src="static/images/fig_ood.png" alt="OOD generalization plot">
+        <figcaption>
+          Out-of-distribution generalization on the open-tabletop
+          environment along object count, plan length, and object
+          arrangement. Dashed lines mark the training-distribution
+          boundary. Solve rate remains high across all three axes under
+          <span class="sc">REAP-GBFS</span>; the greedy variant degrades
+          on the harder ends of plan length and arrangement.
+        </figcaption>
+      </figure>
+
+      <h3 class="subsection-title">OOD instance solved end-to-end</h3>
+      <figure class="full-video">
+        <div class="video-wrap">
+          <video controls muted loop preload="metadata">
+            <source src="static/videos/ood_demo.mp4" type="video/mp4">
+          </video>
+          <span class="video-speed">4&times;</span>
+        </div>
+        <figcaption>
+          REAP-GBFS solving an open-tabletop instance with 22 objects
+          (more than the training maximum of 14), without
+          retraining.
+        </figcaption>
+      </figure>
+
+      <h3 class="subsection-title">Cross-environment OOD generalization</h3>
+      <figure class="env-table-wrap">
+        <table class="env-table">
+          <thead>
+            <tr>
+              <th>Environment</th>
+              <th>Setting</th>
+              <th class="num-head">Solve&nbsp;(%)</th>
+              <th class="num-head">Mean&nbsp;exp./steps</th>
+              <th class="num-head">MP&nbsp;/&nbsp;plan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="env-group">
+              <td rowspan="2"><strong>Confined-Shelf</strong></td>
+              <td>In-distribution (monotone)</td>
+              <td class="num">100.0</td><td class="num">1.00</td><td class="num">7.0</td>
+            </tr>
+            <tr>
+              <td>OOD: 16 objects, non-monotone</td>
+              <td class="num">100.0</td><td class="num">1.00</td><td class="num">11.2</td>
+            </tr>
+            <tr class="env-group">
+              <td rowspan="2"><strong>Multi-Level Shelf</strong></td>
+              <td>In-distribution (1&ndash;5 blockers)</td>
+              <td class="num">100.0</td><td class="num">1.00</td><td class="num">5.5</td>
+            </tr>
+            <tr>
+              <td>OOD (4&ndash;10 blockers)</td>
+              <td class="num">100.0</td><td class="num">1.01</td><td class="num">7.3</td>
+            </tr>
+            <tr class="env-group">
+              <td rowspan="2"><strong>Access-19</strong></td>
+              <td>In-distribution (≤ 14 blockers)</td>
+              <td class="num">98.0</td><td class="num">1.03</td><td class="num">7.8</td>
+            </tr>
+            <tr>
+              <td>OOD (18 blockers, 74-action plan)</td>
+              <td class="tbd num">n/a</td>
+              <td class="tbd num">n/a</td>
+              <td class="tbd num">n/a</td>
+            </tr>
+            <tr class="env-group">
+              <td rowspan="2"><strong>3D Block Stacking</strong></td>
+              <td>In-distribution (1&ndash;8 blocks)</td>
+              <td class="num">100.0</td><td class="num">1.00</td><td class="num">7.1</td>
+            </tr>
+            <tr>
+              <td>OOD (combined, 6&ndash;13 blocks)</td>
+              <td class="num">100.0</td><td class="num">1.16</td><td class="num">22.2</td>
+            </tr>
+          </tbody>
+        </table>
+        <figcaption>
+          <span class="sc">REAP-GBFS</span> across the four non-tabletop
+          environments. <em>exp./steps</em> is search expansions
+          normalized by plan length; <em>MP/plan</em> is motion-planner
+          queries per solved problem. The Access-19 OOD row is omitted
+          at the time of submission. REAP solves
+          in-distribution (up to 14 blockers) but does not generalize
+          within the 5-minute cut-off to the 18-blocker case.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container container-narrow">
+      <p>
+        Static project page, served without trackers, analytics, or
+        external font CDNs to preserve double-blind review integrity.
+        Page structure adapted from the
+        <a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+           target="_blank" rel="noopener">Academic Project Page Template</a>
+        by Eliahu Horwitz.
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
