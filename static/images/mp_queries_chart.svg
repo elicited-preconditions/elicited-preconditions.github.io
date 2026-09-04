@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 760 280"
+     viewBox="0 0 760 480"
      role="img"
-     aria-label="Motion-planner queries per plan on open-tabletop. REAP-GBFS 6.2, REAP-greedy 6.3, BrFS 69.1, h_FF 40.0.">
+     aria-label="Motion-planner queries per solved plan on open-tabletop, log scale. REAP-greedy 5.4, REAP-GBFS 15.5, PDDLStream 23.6, BT-h 28.5, PLOI+BrFS 132.2, BrFS 148.8, hFF 179.0, PLOI+hFF 247.4, SAHS 3002.9.">
   <style>
     .bar-our   { fill: #284b63; }
     .bar-class { fill: #4c6a8d; }
@@ -15,48 +15,65 @@
     .axis-label { font: 500 11px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #59626a; }
   </style>
 
-  <!-- Title -->
-  <text x="380" y="22" class="title" text-anchor="middle">Motion-planner queries per solved plan (open-tabletop, lower is better)</text>
-
-  <!-- Chart area: x in [240, 720] = 480px wide; max bar value 80; scale = 6 px/unit -->
-  <line x1="240" y1="50"  x2="240" y2="230" class="axis"/>
-  <line x1="240" y1="230" x2="720" y2="230" class="axis"/>
-
+  <text x="371.1" y="22" class="title" text-anchor="middle">Motion-planner queries per solved plan (open-tabletop, log scale, lower is better)</text>
+  <line x1="250.0" y1="50" x2="250.0" y2="402" class="axis"/>
+  <line x1="250.0" y1="402" x2="688.0" y2="402" class="axis"/>
   <g class="gridline">
-    <line x1="360" y1="50" x2="360" y2="230"/>
-    <line x1="480" y1="50" x2="480" y2="230"/>
-    <line x1="600" y1="50" x2="600" y2="230"/>
-    <line x1="720" y1="50" x2="720" y2="230"/>
+    <line x1="371.6" y1="50" x2="371.6" y2="402"/>
+    <line x1="493.2" y1="50" x2="493.2" y2="402"/>
+    <line x1="614.8" y1="50" x2="614.8" y2="402"/>
   </g>
   <g class="axis-tick">
-    <text x="240" y="248" text-anchor="middle">0</text>
-    <text x="360" y="248" text-anchor="middle">20</text>
-    <text x="480" y="248" text-anchor="middle">40</text>
-    <text x="600" y="248" text-anchor="middle">60</text>
-    <text x="720" y="248" text-anchor="middle">80</text>
+    <text x="250.0" y="420" text-anchor="middle">1</text>
+    <text x="371.6" y="420" text-anchor="middle">10</text>
+    <text x="493.2" y="420" text-anchor="middle">100</text>
+    <text x="614.8" y="420" text-anchor="middle">1000</text>
   </g>
-  <text x="480" y="268" class="axis-label" text-anchor="middle">MP queries per solved plan</text>
+  <text x="469.0" y="440" class="axis-label" text-anchor="middle">MP queries per solved plan (log scale)</text>
 
-  <!-- 4 bars, 40px slot height, top at y=60 -->
-  <!-- Slot 1 (y=60..82): REAP-GBFS 6.2 -->
-  <text x="232" y="76" class="label" text-anchor="end">REAP-GBFS</text>
-  <rect x="240" y="62"  width="37"  height="22" class="bar-our"/>
-  <text x="285" y="78" class="value">6.2</text>
+  <!-- REAP-GBFS: 15.5 -->
+  <text x="242.0" y="76" class="label" text-anchor="end">REAP-GBFS</text>
+  <rect x="250.0" y="62" width="144.7" height="20" class="bar-our"/>
+  <text x="402.2" y="77" class="value">15.5</text>
 
-  <!-- Slot 2 (y=100..122): REAP-greedy 6.3 -->
-  <text x="232" y="116" class="label" text-anchor="end">REAP-greedy</text>
-  <rect x="240" y="102" width="38"  height="22" class="bar-our"/>
-  <text x="286" y="118" class="value">6.3</text>
+  <!-- REAP-greedy: 5.4 -->
+  <text x="242.0" y="114" class="label" text-anchor="end">REAP-greedy</text>
+  <rect x="250.0" y="100" width="89.1" height="20" class="bar-our"/>
+  <text x="346.5" y="115" class="value">5.4</text>
 
-  <!-- Slot 3 (y=140..162): BrFS 69.1 -->
-  <text x="232" y="156" class="label" text-anchor="end">BrFS</text>
-  <rect x="240" y="142" width="415" height="22" class="bar-class"/>
-  <text x="663" y="158" class="value">69.1</text>
+  <!-- PDDLStream: 23.6 -->
+  <text x="242.0" y="152" class="label" text-anchor="end">PDDLStream</text>
+  <rect x="250.0" y="138" width="166.9" height="20" class="bar-class"/>
+  <text x="424.4" y="153" class="value">23.6</text>
 
-  <!-- Slot 4 (y=180..202): h_FF 40.0 -->
-  <text x="232" y="196" class="label" text-anchor="end">
-    h<tspan dy="3" font-size="8.5">FF</tspan><tspan dy="-3"> </tspan>
-  </text>
-  <rect x="240" y="182" width="240" height="22" class="bar-class"/>
-  <text x="488" y="198" class="value">40.0</text>
+  <!-- BT-h*: 28.5 -->
+  <text x="242.0" y="190" class="label" text-anchor="end">BT-h*</text>
+  <rect x="250.0" y="176" width="176.9" height="20" class="bar-class"/>
+  <text x="434.3" y="191" class="value">28.5</text>
+
+  <!-- PLOI + BrFS: 132.2 -->
+  <text x="242.0" y="228" class="label" text-anchor="end">PLOI + BrFS</text>
+  <rect x="250.0" y="214" width="258.0" height="20" class="bar-class"/>
+  <text x="515.4" y="229" class="value">132.2</text>
+
+  <!-- BrFS: 148.8 -->
+  <text x="242.0" y="266" class="label" text-anchor="end">BrFS</text>
+  <rect x="250.0" y="252" width="264.2" height="20" class="bar-class"/>
+  <text x="521.7" y="267" class="value">148.8</text>
+
+  <!-- hFF: 179.0 -->
+  <text x="242.0" y="304" class="label" text-anchor="end">h<tspan dy="3" font-size="8.5">FF</tspan><tspan dy="-3"> </tspan></text>
+  <rect x="250.0" y="290" width="274.0" height="20" class="bar-class"/>
+  <text x="531.4" y="305" class="value">179.0</text>
+
+  <!-- PLOI + hFF: 247.4 -->
+  <text x="242.0" y="342" class="label" text-anchor="end">PLOI + h<tspan dy="3" font-size="8.5">FF</tspan><tspan dy="-3"> </tspan></text>
+  <rect x="250.0" y="328" width="291.0" height="20" class="bar-class"/>
+  <text x="548.5" y="343" class="value">247.4</text>
+
+  <!-- SAHS: 3002.9 -->
+  <text x="242.0" y="380" class="label" text-anchor="end">SAHS</text>
+  <rect x="250.0" y="366" width="422.9" height="20" class="bar-class"/>
+  <text x="680.4" y="381" class="value">3002.9</text>
+
 </svg>

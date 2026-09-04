@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="REAP learns a relational graph neural network heuristic over a coarse symbolic abstraction with motion-planner feedback, deployed under greedy best-first search across five robot rearrangement environments.">
   <meta name="robots" content="noindex, nofollow">
-  <title>REAP: Anonymous Submission</title>
+  <title>REAP: Learning General Rearrangement Heuristics from Motion-Planner Feedback</title>
   <link rel="stylesheet" href="static/css/style.css">
   <style>
     /* v2 overrides (delete this block to revert) */
@@ -37,10 +37,17 @@
         from Motion-Planner Feedback
       </h1>
 
-      <p class="venue">Under review for CoRL&nbsp;2026</p>
+      <p class="authors">
+        Daniel Swoboda &nbsp;&middot;&nbsp; Hector Geffner
+      </p>
+
+      <p class="venue">
+        Accepted at the Conference on Robot Learning (CoRL)&nbsp;2026
+      </p>
 
       <p class="release-note">
-        Paper, supplementary, and code will be released after the review period.
+        Code, trained weights, datasets, baseline reimplementations and the
+        MuJoCo environments will be made available shortly.
       </p>
     </div>
   </header>
@@ -53,7 +60,7 @@
       <figure class="banner-video">
         <video autoplay muted loop playsinline preload="metadata"
                poster="static/images/env_a_tabletop.png">
-          <source src="static/videos/banner_montage.mp4" type="video/mp4">
+          <source src="static/videos/banner_montage_no_access19.mp4" type="video/mp4">
         </video>
       </figure>
       <p class="tagline">
@@ -108,20 +115,20 @@
     <div class="container">
       <div class="stat-grid">
         <div class="stat-card">
-          <div class="stat-value">95.7<span class="stat-unit">%</span></div>
+          <div class="stat-value">95.9<span class="stat-unit">%</span></div>
           <div class="stat-label">Solve rate on 300 open-tabletop problems</div>
-          <div class="stat-sub">REAP-GBFS, vs 76.7% for h<sub>FF</sub> and 61.7% for BrFS &middot; 5-min cutoff, incl. motion-planner calls</div>
+          <div class="stat-sub">REAP-GBFS (mean over 6 seeds), vs 76.7% for h<sub>FF</sub> and 56.7% for BrFS &middot; identical 300&nbsp;s cap for every method</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value">~10<span class="stat-unit">&times;</span></div>
+          <div class="stat-value">~11<span class="stat-unit">&times;</span></div>
           <div class="stat-label">Fewer motion-planner queries per solved plan</div>
-          <div class="stat-sub">6.2 for REAP-GBFS, 40.0 for h<sub>FF</sub>, 69.1 for BrFS</div>
+          <div class="stat-sub">15.5 for REAP-GBFS, 179.0 for h<sub>FF</sub>, 148.8 for BrFS &middot; distinct queries, deduplicated per problem</div>
         </div>
         <div class="stat-card">
-          <div class="stat-value">1.14</div>
-          <div class="stat-label">Search expansions per plan step</div>
-          <div class="stat-sub">vs 3.68 for h<sub>FF</sub> and 16.63 for BrFS. REAP&rsquo;s policy
-            anticipates infeasibility, so the search barely visits any dead ends.</div>
+          <div class="stat-value">1.85</div>
+          <div class="stat-label">Motion-planner queries per expansion</div>
+          <div class="stat-sub">vs 5.04 for h<sub>FF</sub>, 7.01 for BrFS and 4.09 for PLOI. How often a
+            method proposes an action the motion planner then rejects.</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">5</div>
@@ -319,19 +326,32 @@
       <p class="section-intro">
         On the open-tabletop suite, REAP-GBFS solves substantially more
         problems than the classical search baselines (BrFS,
-        h<sub>FF</sub>) while making roughly an order of magnitude
-        fewer motion-planner queries per solved plan.
+        h<sub>FF</sub>), an integrated TAMP planner (PDDLStream), and three
+        learning-based methods we reimplemented against the same action space
+        and the same feasibility oracle &mdash; SAHS, PLOI and BT-h &mdash; while
+        making roughly an order of magnitude fewer motion-planner queries per
+        solved plan.
+      </p>
+      <p class="section-intro">
+        The comparison against SAHS is the sharpest: it searches about as
+        efficiently as REAP (1.31 versus 1.27 expansions per plan step), so the
+        two explore the symbolic space equally well. The entire difference is
+        <em>what gets proposed</em> &mdash; and whether the motion planner accepts it.
       </p>
 
       <figure class="bar-chart">
         <object data="static/images/mp_queries_chart.svg"
                 type="image/svg+xml"
-                aria-label="Motion-planner queries per plan: REAP-GBFS vs classical baselines.">
-          <img src="static/images/mp_queries_chart.svg" alt="Motion-planner queries per plan">
+                aria-label="Motion-planner queries per plan, log scale: REAP versus classical, TAMP and learning-based baselines.">
+          <img src="static/images/mp_queries_chart.svg" alt="Motion-planner queries per plan, log scale">
         </object>
         <figcaption>
-          Motion-planner queries per solved plan, 5-minute compute cap
-          per problem. Lower is better.
+          Motion-planner queries per solved plan, identical 300&nbsp;s compute cap
+          per problem. Lower is better. <strong>Note the log scale</strong> &mdash;
+          the values span 5.4 to 3002.9, which a linear axis cannot show.
+          *BT-h is supplied with the object ordering and refines placements only.
+          SAHS&rsquo;s cost is dominated by a fixed per-problem predicate build that
+          requires IK and motion planning before search begins.
         </figcaption>
       </figure>
 
@@ -341,51 +361,77 @@
             <tr>
               <th>Method</th>
               <th class="num-head">Solve&nbsp;(%)</th>
-              <th class="num-head">MP&nbsp;/&nbsp;plan</th>
-              <th class="num-head">Mean&nbsp;exp./steps</th>
+              <th class="num-head">MP&nbsp;/&nbsp;plan&nbsp;[med.]</th>
+              <th class="num-head">Checks&nbsp;/&nbsp;exp.</th>
+              <th class="num-head">Exp./steps</th>
               <th class="num-head">Time&nbsp;(s)</th>
             </tr>
           </thead>
           <tbody>
             <tr class="our-method">
               <td><strong>REAP-GBFS</strong></td>
-              <td class="num"><strong>95.7</strong></td>
-              <td class="num"><strong>6.2</strong></td>
-              <td class="num"><strong>1.14</strong></td>
-              <td class="num"><strong>2.9</strong></td>
+              <td class="num"><strong>95.9&nbsp;&plusmn;&nbsp;0.5</strong></td>
+              <td class="num"><strong>15.5</strong>&nbsp;[3.3]</td>
+              <td class="num"><strong>1.85</strong></td>
+              <td class="num">1.27</td>
+              <td class="num"><strong>3.6</strong></td>
             </tr>
             <tr class="our-method">
               <td>REAP-greedy</td>
-              <td class="num">87.7</td>
-              <td class="num">&asymp;&nbsp;6.3</td>
-              <td class="num">1.00</td>
-              <td class="num">2.4</td>
+              <td class="num">89.4&nbsp;&plusmn;&nbsp;1.5</td>
+              <td class="num">5.4&nbsp;[3.0]</td>
+              <td class="num">&mdash;</td>
+              <td class="num">&mdash;</td>
+              <td class="num">1.8</td>
             </tr>
             <tr>
-              <td>BrFS</td><td class="num">61.7</td><td class="num">69.1</td><td class="num">16.63</td><td class="num">57.9</td>
+              <td>BrFS</td>
+              <td class="num">56.7</td><td class="num">148.8&nbsp;[12.0]</td>
+              <td class="num">7.01</td><td class="num">7.26</td><td class="num">19.5</td>
             </tr>
             <tr>
               <td>h<sub>FF</sub></td>
-              <td class="num">76.7</td><td class="num">40.0</td><td class="num">3.68</td><td class="num">28.4</td>
+              <td class="num">76.7</td><td class="num">179.0&nbsp;[1.0]</td>
+              <td class="num">5.04</td><td class="num">3.62</td><td class="num">25.4</td>
             </tr>
             <tr>
-              <td>PDDLStream (test-stream, ff-astar2)</td>
-              <td class="num">42.0</td><td class="num">2.4</td><td class="num">1.41</td><td class="num">3.9</td>
+              <td>SAHS <span class="cite">(Kim &amp; Shimanuki, 2019)</span></td>
+              <td class="num">57.3</td><td class="num">3002.9&nbsp;[2962]</td>
+              <td class="num">&mdash;</td><td class="num">1.31</td><td class="num">59.3</td>
             </tr>
             <tr>
-              <td>PDDLStream (test-stream, ff-eager)</td>
-              <td class="num">41.3</td><td class="num">1.6</td><td class="num">1.14</td><td class="num">1.6</td>
+              <td>PLOI&nbsp;+&nbsp;h<sub>FF</sub> <span class="cite">(Silver et al., 2021)</span></td>
+              <td class="num">73.7</td><td class="num">247.4&nbsp;[2.0]</td>
+              <td class="num">4.09</td><td class="num">8.74</td><td class="num">42.2</td>
             </tr>
             <tr>
-              <td>PDDLStream (cell-generator, ff-eager)</td>
-              <td class="num">44.0</td><td class="num">8.7</td><td class="num">3.47</td><td class="num">9.2</td>
+              <td>PLOI&nbsp;+&nbsp;BrFS</td>
+              <td class="num">54.3</td><td class="num">132.2&nbsp;[2.0]</td>
+              <td class="num">3.56</td><td class="num">12.65</td><td class="num">23.5</td>
+            </tr>
+            <tr>
+              <td>BT-h <span class="cite">(Cieślar et al., 2025)</span>, <em>given the plan ordering</em></td>
+              <td class="num">81.7</td><td class="num">28.5&nbsp;[3.0]</td>
+              <td class="num">&mdash;</td><td class="num">4.25</td><td class="num">4.5</td>
+            </tr>
+            <tr>
+              <td>PDDLStream <span class="cite">(best of four configurations)</span></td>
+              <td class="num">64.3</td><td class="num">23.6&nbsp;[1.0]</td>
+              <td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">17.2</td>
             </tr>
           </tbody>
         </table>
         <figcaption>
-          PDDLStream&rsquo;s per-plan averages are over the 42&ndash;44%
-          of the suite it solves (mostly no-relocation problems), and
-          are not directly comparable to REAP&rsquo;s full-suite averages.
+          300 problems, one identical 300&nbsp;s cap, the same symbolic action
+          space and the same feasibility oracle for every method.
+          <em>MP&nbsp;/&nbsp;plan</em> is distinct motion-planner queries per solved
+          problem, deduplicated within a problem; median in brackets.
+          <em>Checks&nbsp;/&nbsp;exp.</em> is queries per expansion &mdash; how often a
+          method proposes an action the motion planner then rejects.
+          REAP rows are mean&nbsp;&plusmn;&nbsp;std over 6 seeds; all others are single runs.
+          SAHS&rsquo;s cost is a fixed per-problem floor rather than a per-expansion
+          rate, so checks&nbsp;/&nbsp;exp. is not meaningful for it. BT-h is supplied with
+          the object ordering and refines placements only.
         </figcaption>
       </figure>
 
@@ -401,21 +447,26 @@
       <p class="section-intro">
         REAP&rsquo;s learned heuristic generalizes out-of-distribution along
         several axes. On open-tabletop, the policy trained on at most
-        14 objects with plan lengths up to 11 reaches 95.7% solve
+        14 objects with plan lengths up to 11 reaches 95.9% solve
         rate under <span class="sc">REAP-GBFS</span> across the full
         300-problem suite (up to 24 objects, plan lengths up to 15).
       </p>
 
       <h3 class="subsection-title">Open-Tabletop: three OOD axes</h3>
       <figure class="ood-figure">
-        <img src="static/images/fig_ood.png" alt="OOD generalization plot">
+        <img src="static/images/fig_ood.png" alt="Out-of-distribution generalization: REAP versus four baselines across object count, plan length and object arrangement">
         <figcaption>
           Out-of-distribution generalization on the open-tabletop
           environment along object count, plan length, and object
-          arrangement. Dashed lines mark the training-distribution
-          boundary. Solve rate remains high across all three axes under
-          <span class="sc">REAP-GBFS</span>; the greedy variant degrades
-          on the harder ends of plan length and arrangement.
+          arrangement, for <span class="sc">REAP</span> and four baselines.
+          Dashed lines mark the training-distribution boundary; panel (a) is
+          scaled to 75&ndash;100%, so vertical positions are not comparable
+          across panels. <span class="sc">REAP</span> lines are means over six
+          seeds with shaded bands at &plusmn;1 standard deviation; the baselines
+          are single runs and carry no band. Every baseline degrades with plan
+          length and reaches zero by length&nbsp;13; <span class="sc">REAP-GBFS</span>
+          does not. The two rightmost plan-length buckets hold only two problems
+          and one, so values there are single instances rather than trends.
         </figcaption>
       </figure>
 
@@ -471,9 +522,9 @@
           environments. <em>exp./steps</em> is search expansions
           normalized by plan length; <em>MP/plan</em> is motion-planner
           queries per solved problem. Access-19 is shown
-          in-distribution only: REAP solves up to 14 blockers reliably
-          but does not generalize within the 5-minute cut-off to the
-          18-blocker case at the time of submission.
+          in-distribution only: REAP solves up to 14 blockers reliably, but a
+          single goal-conditioned policy does not solve the 18-blocker case
+          &mdash; see Limitations.
         </figcaption>
       </figure>
     </div>
@@ -491,9 +542,12 @@
         (predicates, action schemas) is hand-crafted per environment,
         and REAP learns the heuristic over that fixed vocabulary.
         Within a domain, REAP scales to denser scenes and longer plans
-        than seen during training, but Access-19 with 18 blockers
-        remains unsolved within the 5-minute cut-off at the time of
-        submission. Training also requires a few hundred
+        than seen during training, but a single goal-conditioned policy does not
+        solve Access-19 with 18 blockers. The obstacle is not horizon &mdash; plan
+        extraction succeeds at 100% for plans of up to 30 steps &mdash; but
+        <em>subgoal decomposition</em>: the task requires moving blockers away
+        from their goal positions before restoring them, and two policies trained
+        one per phase and executed in sequence do solve it. Training also requires a few hundred
         motion-planner-supervised episodes per environment, which is
         cheaper than running motion planning at deployment but is
         still not free.

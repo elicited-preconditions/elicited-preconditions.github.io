@@ -63,6 +63,15 @@ a:hover { text-decoration: underline; }
   color: var(--text);
   letter-spacing: -0.01em;
 }
+/* Author line, sits between the title and the venue. Not italic (the venue is),
+   and a touch larger, so the two lines read as name-then-venue rather than as
+   one run of metadata. */
+.authors {
+  font-size: 1.08rem;
+  color: var(--text);
+  margin: 10px 0 2px;
+  font-weight: 500;
+}
 .venue {
   font-size: 1.0rem;
   color: var(--text-muted);
@@ -545,4 +554,12 @@ a:hover { text-decoration: underline; }
   .hero-video { padding: 24px 0 12px; }
   .env-table { font-size: 0.84rem; }
   .env-table th, .env-table td { padding: 8px 10px; }
+}
+
+/* Inline author-year attribution inside a table cell (baselines table).
+   Muted and smaller so the method name still reads as the row label. */
+.env-table .cite {
+  font-size: 0.82em;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
