@@ -1,5 +1,7 @@
 # Never commit confidential paper artifacts
 *.pdf
+# ...except the public paper linked from the page
+!static/paper/reap_corl2026.pdf
 
 # Never commit local notes / docs / READMEs
 *.md

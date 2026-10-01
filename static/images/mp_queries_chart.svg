@@ -4,18 +4,19 @@
      role="img"
      aria-label="Motion-planner queries per solved plan on open-tabletop, log scale. REAP-greedy 5.4, REAP-GBFS 15.5, PDDLStream 23.6, BT-h 28.5, PLOI+BrFS 132.2, BrFS 148.8, hFF 179.0, PLOI+hFF 247.4, SAHS 3002.9.">
   <style>
-    .bar-our   { fill: #284b63; }
+    @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&amp;display=swap");
+    .bar-our   { fill: #af6b60; }
     .bar-class { fill: #4c6a8d; }
-    .label     { font: 600 12px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #1f2430; }
-    .value     { font: 700 12px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #1f2430; }
-    .axis      { stroke: #b7c0cd; stroke-width: 1; }
-    .gridline  { stroke: #e2e6ec; stroke-width: 1; stroke-dasharray: 2 3; }
-    .axis-tick { font: 400 11px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #59626a; }
-    .title     { font: 700 13px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #1f2430; }
-    .axis-label { font: 500 11px -apple-system, "Segoe UI", Roboto, Arial, sans-serif; fill: #59626a; }
+    .label     { font: 500 12px "Roboto Mono", ui-monospace, Menlo, monospace; fill: #303943; }
+    .value     { font: 700 12px "Roboto Mono", ui-monospace, Menlo, monospace; fill: #303943; }
+    .axis      { stroke: #687681; stroke-width: 1; }
+    .gridline  { stroke: #cdd0d5; stroke-width: 1; stroke-dasharray: 2 3; }
+    .axis-tick { font: 400 11px "Roboto Mono", ui-monospace, Menlo, monospace; fill: #687681; }
+    .title     { font: 700 12px "Roboto Mono", ui-monospace, Menlo, monospace; fill: #303943; }
+    .axis-label { font: 500 11px "Roboto Mono", ui-monospace, Menlo, monospace; fill: #687681; }
   </style>
 
-  <text x="371.1" y="22" class="title" text-anchor="middle">Motion-planner queries per solved plan (open-tabletop, log scale, lower is better)</text>
+  <text x="371.1" y="22" class="title" text-anchor="middle">MP queries per solved plan (open-tabletop, lower is better)</text>
   <line x1="250.0" y1="50" x2="250.0" y2="402" class="axis"/>
   <line x1="250.0" y1="402" x2="688.0" y2="402" class="axis"/>
   <g class="gridline">
